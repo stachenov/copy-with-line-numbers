@@ -1,0 +1,23 @@
+<idea-plugin>
+    <id>name.tachenov.intellij.copy-with-line-numbers</id>
+    <name>Copy with Line Numbers</name>
+    <vendor email="sergei@tachenov.name" url="http://github.com/stachenov/copy-with-line-numbers">Sergei Tachenov</vendor>
+
+    <description><![CDATA[
+    <p>Allows copying the selection with line numbers<p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <actions>
+        <action id="name.tachenov.Platform.CopyWithLineNumbers"
+                class="name.tachenov.intellij.plugins.copyWithLineNumbers.CopyWithLineNumbers"
+                text="Copy with Line Numbers"
+                description="Copy the selection with line numbers">
+            <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="$Copy"/>
+        </action>
+    </actions>
+</idea-plugin>
