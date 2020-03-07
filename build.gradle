@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'name.tachenov.intellij.plugins'
-version '1.0-SNAPSHOT'
+version '193.0-SNAPSHOT'
 
 repositories {
     jcenter()
@@ -26,7 +26,7 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-    <p>1.0</p>
+    <p>193.0</p>
     <ul>
         <li>2019.3 support</li>
     </ul>
