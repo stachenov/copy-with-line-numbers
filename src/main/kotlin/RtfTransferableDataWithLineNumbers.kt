@@ -20,6 +20,13 @@ class RtfTransferableDataWithLineNumbers(rawText: String, rtf: RtfTransferableDa
         So it's either make our own RTF builder (which is very tiresome and brittle),
         or hack the existing one by using the only one “extension point”:
         hacking the output as raw byte stream.
+
+        It isn't too DRY either because most of this is sort of duplicated in HtmlTransferableDataWithLineNumbers.
+        Well, with all this ugliness and brittleness I expect dirty hotfixes as the original data changes,
+        additional tags are added and so on. Better keep HTML mess separate from RTF mess to ensure a hotfix
+        to one doesn't break another. It's not like we have any unit tests here. It's not like it'd make sense
+        to have any because we can't construct input (RtfTransferableData) anyway. There wouldn't be any need
+        for all of this if we could.
          */
         rtf.setRawText(rawText)
         val byteBuffer = ByteArrayOutputStream()
@@ -39,10 +46,18 @@ class RtfTransferableDataWithLineNumbers(rawText: String, rtf: RtfTransferableDa
         val headerEnd = firstLine.indexOf('\n', fontSizePos) + 1
         val header = firstLine.substring(0, headerEnd)
         lines[0] = firstLine.substring(headerEnd)
-        val text = header + lines.asSequence()
-                .withIndex()
-                .map { "${it.index + 1}$RTF_TAB${it.value}" }
-                .joinToString(RTF_NEW_LINE)
+        val lastLine = lines.last()
+        val suffixPos = lastLine.lastIndexOf("\\par")
+        val suffix = lastLine.substring(suffixPos)
+        lines[lines.lastIndex] = lastLine.substring(0, suffixPos)
+        if (lines[lines.lastIndex].isBlank())
+            lines.removeAt(lines.lastIndex) // looks ugly otherwise
+        val text = header +
+                lines.asSequence()
+                    .withIndex()
+                    .map { "${it.index + 1}$RTF_TAB${it.value}" }
+                    .joinToString(RTF_NEW_LINE) +
+                suffix
         dataWithNumbers = text.toByteArray(StandardCharsets.US_ASCII)
     }
 

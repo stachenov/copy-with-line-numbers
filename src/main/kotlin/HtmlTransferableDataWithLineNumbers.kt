@@ -17,6 +17,13 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, rtf: HtmlTransferable
         So it's either make our own HTML builder (which is very tiresome and brittle),
         or hack the existing one by using the only one “extension point”:
         hacking the output as raw char stream.
+
+        It isn't too DRY either because most of this is sort of duplicated in RtfTransferableDataWithLineNumbers.
+        Well, with all this ugliness and brittleness I expect dirty hotfixes as the original data changes,
+        additional tags are added and so on. Better keep HTML mess separate from RTF mess to ensure a hotfix
+        to one doesn't break another. It's not like we have any unit tests here. It's not like it'd make sense
+        to have any because we can't construct input (HtmlTransferableData) anyway. There wouldn't be any need
+        for all of this if we could.
          */
         rtf.setRawText(rawText)
         val charBuffer = StringBuilder()
@@ -33,13 +40,21 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, rtf: HtmlTransferable
         val lines = htmlString.split(HTML_NEW_LINE).toMutableList()
         val firstLine = lines[0]
         val fontSizePos = firstLine.indexOf("font-size")
-        val headerEnd = firstLine.indexOf('>', fontSizePos) + 1
-        val header = firstLine.substring(0, headerEnd)
-        lines[0] = firstLine.substring(headerEnd)
-        dataWithNumbers = header + lines.asSequence()
-                .withIndex()
-                .map { "${it.index + 1}&#32;&#32;&#32;&#32;${it.value}" }
-                .joinToString(HTML_NEW_LINE)
+        val prefixEnd = firstLine.indexOf('>', fontSizePos) + 1
+        val prefix = firstLine.substring(0, prefixEnd)
+        lines[0] = firstLine.substring(prefixEnd)
+        val lastLine = lines.last()
+        val suffixStart = lastLine.indexOf("</pre>")
+        val suffix = lastLine.substring(suffixStart)
+        lines[lines.lastIndex] = lastLine.substring(0, suffixStart)
+        if (lines[lines.lastIndex].isBlank())
+            lines.removeAt(lines.lastIndex) // looks ugly otherwise
+        dataWithNumbers = prefix +
+                lines.asSequence()
+                    .withIndex()
+                    .map { "${it.index + 1}&#32;&#32;&#32;&#32;${it.value}" }
+                    .joinToString(HTML_NEW_LINE) +
+                suffix
     }
 
     private val readerWithNumbers = StringReader(dataWithNumbers)

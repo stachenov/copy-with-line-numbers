@@ -4,7 +4,7 @@
     <vendor email="sergei@tachenov.name" url="http://github.com/stachenov/copy-with-line-numbers">Sergei Tachenov</vendor>
 
     <description><![CDATA[
-    <p>Allows copying the selection with line numbers.<p>
+    <p>Allows copying the selection with line numbers. Main intended use is for code samples in presentations.<p>
 
     <p>Just assign a shortcut to Copy with Line Numbers action (Ctrl+Shift+A, search, Alt+Enter).
     I prefer to reassign Ctrl+Shift+C since I don't use Copy Paths much.</p>
