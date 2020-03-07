@@ -52,10 +52,11 @@ class RtfTransferableDataWithLineNumbers(rawText: String, rtf: RtfTransferableDa
         lines[lines.lastIndex] = lastLine.substring(0, suffixPos)
         if (lines[lines.lastIndex].isBlank())
             lines.removeAt(lines.lastIndex) // looks ugly otherwise
+        val lineNumbers = lineNumbers(lines.size)
         val text = header +
                 lines.asSequence()
                     .withIndex()
-                    .map { "${it.index + 1}$RTF_TAB${it.value}" }
+                    .map { "${lineNumbers[it.index]}$RTF_TAB${it.value}" }
                     .joinToString(RTF_NEW_LINE) +
                 suffix
         dataWithNumbers = text.toByteArray(StandardCharsets.US_ASCII)

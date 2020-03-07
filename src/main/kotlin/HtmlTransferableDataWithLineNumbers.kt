@@ -6,7 +6,7 @@ import java.awt.datatransfer.DataFlavor
 import java.io.Reader
 import java.io.StringReader
 
-class HtmlTransferableDataWithLineNumbers(rawText: String, rtf: HtmlTransferableData)
+class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferableData)
     : Reader(), TextBlockTransferableData {
 
     private val dataWithNumbers: String
@@ -25,10 +25,10 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, rtf: HtmlTransferable
         to have any because we can't construct input (HtmlTransferableData) anyway. There wouldn't be any need
         for all of this if we could.
          */
-        rtf.setRawText(rawText)
+        html.setRawText(rawText)
         val charBuffer = StringBuilder()
         val buffer = CharArray(16384)
-        rtf.use { original ->
+        html.use { original ->
             while (true) { // really need a ReaderUtil.readAll()-like thing here
                 val read = original.read(buffer)
                 if (read == -1)
@@ -49,10 +49,12 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, rtf: HtmlTransferable
         lines[lines.lastIndex] = lastLine.substring(0, suffixStart)
         if (lines[lines.lastIndex].isBlank())
             lines.removeAt(lines.lastIndex) // looks ugly otherwise
-        dataWithNumbers = prefix +
+        val lineNumbers = lineNumbers(lines.size)
+        dataWithNumbers =
+                prefix +
                 lines.asSequence()
                     .withIndex()
-                    .map { "${it.index + 1}&#32;&#32;&#32;&#32;${it.value}" }
+                    .map { "${lineNumbers[it.index]}&#32;&#32;&#32;&#32;${it.value}" }
                     .joinToString(HTML_NEW_LINE) +
                 suffix
     }
