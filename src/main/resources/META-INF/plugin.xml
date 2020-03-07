@@ -9,8 +9,7 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-    </extensions>
+    <extensions defaultExtensionNs="com.intellij"/>
 
     <actions>
         <action id="name.tachenov.Platform.CopyWithLineNumbers"
@@ -20,4 +19,5 @@
             <add-to-group group-id="CutCopyPasteGroup" anchor="after" relative-to-action="$Copy"/>
         </action>
     </actions>
+
 </idea-plugin>
