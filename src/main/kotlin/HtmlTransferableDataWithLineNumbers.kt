@@ -50,11 +50,14 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
         if (lines[lines.lastIndex].isBlank())
             lines.removeAt(lines.lastIndex) // looks ugly otherwise
         val lineNumbers = lineNumbers(lines.size)
+        val color = findColor(prefix)
+        val htmlLineNumbers = lineNumbers
+                .map { "<span style=\"color:#$color\">$it&#32;&#32;&#32;&#32;</span>" }
         dataWithNumbers =
                 prefix +
                 lines.asSequence()
                     .withIndex()
-                    .map { "${lineNumbers[it.index]}&#32;&#32;&#32;&#32;${it.value}" }
+                    .map { "${htmlLineNumbers[it.index]}${it.value}" }
                     .joinToString(HTML_NEW_LINE) +
                 suffix
     }
@@ -76,3 +79,11 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
 }
 
 private const val HTML_NEW_LINE = "<br>"
+
+private fun findColor(html: String): String {
+    val keyString = ";color:#"
+    val keyStringIndex = html.indexOf(keyString)
+    val colorStartIndex = keyStringIndex + keyString.length
+    val colorLength = 6
+    return html.substring(colorStartIndex, colorStartIndex + colorLength)
+}
