@@ -7,7 +7,6 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl
-import com.intellij.openapi.editor.richcopy.view.HtmlTransferableData
 import com.intellij.openapi.editor.richcopy.view.RtfTransferableData
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
@@ -32,18 +31,31 @@ class CopyWithLineNumbers : AnAction(), DumbAware {
                 transferableDataList.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets))
             }
         }
-        transferableDataList.retainAll { it is RtfTransferableData || it is HtmlTransferableData }
         var text = if (editor.caretModel.supportsMultipleCarets())
                 EditorCopyPasteHelperImpl.getSelectedTextForClipboard(editor, transferableDataList)
             else
                 selectionModel.selectedText
-        text = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDataList)!!
+        text = TextBlockTransferable.convertLineSeparators(text, "\n", transferableDataList)
+        // ignore the copy preprocessors here because we're implementing a very specific use case here
         text = addLineNumbers(text, transferableDataList)
         val transferable = TextBlockTransferable(text, transferableDataList, null)
         CopyPasteManager.getInstance().setContents(transferable)
     }
 
-    private fun addLineNumbers(text: String, transferableDataList: ArrayList<TextBlockTransferableData>): String {
-        return text
+    private fun addLineNumbers(text: String, transferableDataList: MutableList<TextBlockTransferableData>): String {
+        val it = transferableDataList.listIterator()
+        while (it.hasNext()) {
+            when (val data = it.next()) {
+                is RtfTransferableData -> it.set(RtfTransferableDataWithLineNumbers(text, data))
+                else -> it.remove()
+            }
+        }
+        val textWithLineNumbers = addLineNumbers(text)
+        return textWithLineNumbers
     }
+
+    private fun addLineNumbers(text: String) = text.split('\n').asSequence()
+            .withIndex()
+            .map { "${it.index + 1}\t${it.value}" }
+            .joinToString("\n")
 }
