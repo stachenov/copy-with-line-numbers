@@ -52,7 +52,7 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
         val lineNumbers = lineNumbers(lines.size)
         val color = findColor(prefix)
         val htmlLineNumbers = lineNumbers
-                .map { "<span style=\"color:#$color\">$it&#32;&#32;&#32;&#32;</span>" }
+                .map { "<span style=\"color:#$color;font-style:normal;font-weight:normal\">$it&#32;&#32;&#32;&#32;</span>" }
         dataWithNumbers =
                 prefix +
                 lines.asSequence()
