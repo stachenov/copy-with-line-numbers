@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.impl.EditorCopyPasteHelperImpl
+import com.intellij.openapi.editor.richcopy.view.HtmlTransferableData
 import com.intellij.openapi.editor.richcopy.view.RtfTransferableData
 import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
@@ -47,6 +48,7 @@ class CopyWithLineNumbers : AnAction(), DumbAware {
         while (it.hasNext()) {
             when (val data = it.next()) {
                 is RtfTransferableData -> it.set(RtfTransferableDataWithLineNumbers(text, data))
+                is HtmlTransferableData -> it.set(HtmlTransferableDataWithLineNumbers(text, data))
                 else -> it.remove()
             }
         }
