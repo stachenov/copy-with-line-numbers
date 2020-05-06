@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'name.tachenov.intellij.plugins'
-version '193.0'
+version '201.0'
 
 repositories {
     jcenter()
@@ -22,10 +22,14 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2019.3'
+    version '2020.1'
 }
 patchPluginXml {
     changeNotes """
+    <p>201.0</p>
+    <ul>
+        <li>2020.1 support</li>
+    </ul>
     <p>193.0</p>
     <ul>
         <li>2019.3 support</li>
