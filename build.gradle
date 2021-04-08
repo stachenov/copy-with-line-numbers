@@ -1,14 +1,14 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.6.5'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'org.jetbrains.intellij' version '0.7.2'
+    id 'org.jetbrains.kotlin.jvm' version '1.4.32'
 }
 
 group 'name.tachenov.intellij.plugins'
-version '203.0'
+version '211.0'
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -22,10 +22,14 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version '2020.3'
+    version '2021.1'
 }
 patchPluginXml {
     changeNotes """
+    <p>211.0</p>
+    <ul>
+        <li>2021.1 support</li>
+    </ul>
     <p>203.0</p>
     <ul>
         <li>2020.3 support</li>
