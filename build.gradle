@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'name.tachenov.intellij.plugins'
-version '212.0'
+version '2021.2.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -22,10 +22,14 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "11"
 }
 intellij {
-    version '2021.2'
+    version = '2021.2'
 }
 patchPluginXml {
     changeNotes = """
+    <p>2021.2.0.1</p>
+    <ul>
+        <li>Fixed build script (version number)</li>
+    </ul>
     <p>212.0</p>
     <ul>
         <li>2021.2 support</li>
