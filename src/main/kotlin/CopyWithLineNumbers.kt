@@ -29,7 +29,7 @@ class CopyWithLineNumbers : AnAction(), DumbAware {
         val transferableDataList = ArrayList<TextBlockTransferableData>()
         DumbService.getInstance(project).withAlternativeResolveEnabled {
             for (processor in CopyPastePostProcessor.EP_NAME.extensionList) {
-                transferableDataList.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets))
+                transferableDataList.addAll(processor.collectTransferableData(file!!, editor, startOffsets, endOffsets))
             }
         }
         var text = if (editor.caretModel.supportsMultipleCarets())
