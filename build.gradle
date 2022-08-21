@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'name.tachenov.intellij.plugins'
-version '2022.2-SNAPSHOT'
+version '2022.2'
 
 repositories {
     mavenCentral()
