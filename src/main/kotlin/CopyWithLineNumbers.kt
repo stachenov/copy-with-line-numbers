@@ -13,7 +13,6 @@ import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiDocumentManager
-import java.util.*
 
 class CopyWithLineNumbers : AnAction(), DumbAware {
     override fun actionPerformed(e: AnActionEvent) {
@@ -21,7 +20,7 @@ class CopyWithLineNumbers : AnAction(), DumbAware {
         // so this was mostly shamelessly copied from com.intellij.codeInsight.editorActions.CopyHandler.doExecute()
         val editor = CommonDataKeys.EDITOR.getData(e.dataContext) ?: return
         val project = CommonDataKeys.PROJECT.getData(e.dataContext) ?: return
-        val file = PsiDocumentManager.getInstance(project).getPsiFile(editor.document)
+        val file = PsiDocumentManager.getInstance(project).getPsiFile(editor.document) ?: return
         val selectionModel = editor.selectionModel
         PsiDocumentManager.getInstance(project).commitAllDocuments()
         val startOffsets = selectionModel.blockSelectionStarts
@@ -29,9 +28,7 @@ class CopyWithLineNumbers : AnAction(), DumbAware {
         val transferableDataList = ArrayList<TextBlockTransferableData>()
         DumbService.getInstance(project).withAlternativeResolveEnabled {
             for (processor in CopyPastePostProcessor.EP_NAME.extensionList) {
-                if (file != null) {
-                    transferableDataList.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets))
-                }
+                transferableDataList.addAll(processor.collectTransferableData(file, editor, startOffsets, endOffsets))
             }
         }
         var text = if (editor.caretModel.supportsMultipleCarets())
