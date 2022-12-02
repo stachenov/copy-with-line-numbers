@@ -33,14 +33,14 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
                 val read = original.read(buffer)
                 if (read == -1)
                     break
-                charBuffer.append(buffer, 0, read)
+                charBuffer.appendRange(buffer, 0, read)
             }
         }
         val htmlString = charBuffer.toString()
         val lines = htmlString.split(HTML_NEW_LINE).toMutableList()
         val firstLine = lines[0]
-        val fontSizePos = firstLine.indexOf("font-size")
-        val prefixEnd = firstLine.indexOf('>', fontSizePos) + 1
+        val prePos = firstLine.indexOf("<pre")
+        val prefixEnd = firstLine.indexOf('>', prePos) + 1
         val prefix = firstLine.substring(0, prefixEnd)
         lines[0] = firstLine.substring(prefixEnd)
         val lastLine = lines.last()
