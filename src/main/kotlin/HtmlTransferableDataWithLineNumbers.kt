@@ -39,12 +39,12 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
         val htmlString = charBuffer.toString()
         val lines = htmlString.split(HTML_NEW_LINE).toMutableList()
         val firstLine = lines[0]
-        val prePos = firstLine.indexOf("<pre")
+        val prePos = firstLine.indexOf("<div")
         val prefixEnd = firstLine.indexOf('>', prePos) + 1
         val prefix = firstLine.substring(0, prefixEnd)
         lines[0] = firstLine.substring(prefixEnd)
         val lastLine = lines.last()
-        val suffixStart = lastLine.indexOf("</pre>")
+        val suffixStart = lastLine.indexOf("</div></body></html>")
         val suffix = lastLine.substring(suffixStart)
         lines[lines.lastIndex] = lastLine.substring(0, suffixStart)
         if (lines[lines.lastIndex].isBlank())
@@ -72,8 +72,8 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
     override fun markSupported() = readerWithNumbers.markSupported()
 
     override fun getOffsetCount() = 0
-    override fun setOffsets(offsets: IntArray?, index: Int) = index
-    override fun getOffsets(offsets: IntArray?, index: Int) = index
+    override fun setOffsets(offsets: IntArray, index: Int): Int = index
+    override fun getOffsets(offsets: IntArray, index: Int): Int = index
     override fun getFlavor(): DataFlavor = HtmlTransferableData.FLAVOR
     override fun getPriority(): Int = HtmlTransferableData.PRIORITY
 }

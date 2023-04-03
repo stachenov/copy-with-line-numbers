@@ -72,8 +72,8 @@ class RtfTransferableDataWithLineNumbers(rawText: String, rtf: RtfTransferableDa
     override fun markSupported() = inputStreamWithNumbers.markSupported()
 
     override fun getOffsetCount() = 0
-    override fun setOffsets(offsets: IntArray?, index: Int) = index
-    override fun getOffsets(offsets: IntArray?, index: Int) = index
+    override fun setOffsets(offsets: IntArray, index: Int): Int = index
+    override fun getOffsets(offsets: IntArray, index: Int): Int = index
     override fun getFlavor(): DataFlavor = RtfTransferableData.FLAVOR
     override fun getPriority(): Int = RtfTransferableData.PRIORITY
 }
