@@ -39,12 +39,12 @@ class HtmlTransferableDataWithLineNumbers(rawText: String, html: HtmlTransferabl
         val htmlString = charBuffer.toString()
         val lines = htmlString.split(HTML_NEW_LINE).toMutableList()
         val firstLine = lines[0]
-        val prePos = firstLine.indexOf("<div")
+        val prePos = firstLine.indexOf("<pre")
         val prefixEnd = firstLine.indexOf('>', prePos) + 1
         val prefix = firstLine.substring(0, prefixEnd)
         lines[0] = firstLine.substring(prefixEnd)
         val lastLine = lines.last()
-        val suffixStart = lastLine.indexOf("</div></body></html>")
+        val suffixStart = lastLine.indexOf("</pre></div></body></html>")
         val suffix = lastLine.substring(suffixStart)
         lines[lines.lastIndex] = lastLine.substring(0, suffixStart)
         if (lines[lines.lastIndex].isBlank())
